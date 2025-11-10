@@ -203,12 +203,12 @@ The framework uses localStorage to persist state across pages:
 
 1. **Clone the repository**:
    ```bash
-   https://github.com/imisstheoldpabl0/check24-demo.git
+   git clone https://github.com/imisstheoldpabl0/check24-demo.git
    ```
 
 2. **Navigate to the clone folder**:
    ```bash
-   cd clone
+   cd check24-demo/clone
    ```
 
 3. **Install dependencies**:
