@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personalizar | CHECK24 España</title>
+    <link rel="stylesheet" href="css/wireframe.min.css">
+    <link rel="stylesheet" href="css/personalize-styles.css">
+    <link rel="stylesheet" href="css/c24es.css">
+    <style>
+        .c24-search { display: none; }
+        .nav-button {
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .nav-button:hover {
+            opacity: 0.8;
+        }
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        .progress-step::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #DDD;
+            z-index: -1;
+        }
+        .progress-step:first-child::before {
+            left: 50%;
+        }
+        .progress-step:last-child::before {
+            right: 50%;
+        }
+        .progress-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #DDD;
+            color: white;
+            line-height: 30px;
+            margin-bottom: 8px;
+        }
+        .progress-step.completed .progress-number {
+            background: #2E7D32;
+        }
+        .progress-step.active .progress-number {
+            background: #0066CC;
+        }
+        .progress-step.completed::before,
+        .progress-step.active::before {
+            background: #2E7D32;
+        }
+        .coverage-card {
+            background: white;
+            border: 2px solid #DDD;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: border-color 0.2s;
+        }
+        .coverage-card.selected {
+            border-color: #0066CC;
+            background: #F0F7FF;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .badge-popular {
+            background: #FFE0B2;
+            color: #E65100;
+        }
+        .badge-recommended {
+            background: #C8E6C9;
+            color: #2E7D32;
+        }
+
+        /* Smart Pre-Check Progress Bar */
+        .precheck-banner {
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            border: 2px solid #0066CC;
+            border-radius: 8px;
+            padding: 20px 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0, 102, 204, 0.1);
+        }
+
+        .precheck-loading {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .precheck-loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #BBDEFB;
+            border-top: 4px solid #0066CC;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .precheck-loading-text {
+            flex: 1;
+        }
+
+        .precheck-loading-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #0066CC;
+            margin-bottom: 5px;
+        }
+
+        .precheck-loading-subtitle {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .precheck-loading-dots::after {
+            content: '';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+
+        .precheck-success {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .precheck-success-icon {
+            font-size: 40px;
+        }
+
+        .precheck-success-text {
+            flex: 1;
+        }
+
+        .precheck-success-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2E7D32;
+            margin-bottom: 5px;
+        }
+
+        .precheck-success-price {
+            font-size: 20px;
+            font-weight: bold;
+            color: #0066CC;
+            margin-top: 8px;
+        }
+
+        .precheck-message-bubble {
+            background: #F0F7FF;
+            border-left: 4px solid #0066CC;
+            padding: 15px 20px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #0066CC;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="c24-body c24-wide c24-fluid-grid">
+
+    <!-- Header -->
+    <header class="c24-header">
+        <div class="c24-header-content">
+            <div class="c24-logo">
+                <img src="images/logos/check24.svg" alt="CHECK24" style="height: 40px;">
+            </div>
+            <nav class="c24-navigation">
+                <a href="#">Área clientes</a>
+                <a href="#">Ayuda</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div id="c24es-app">
+        <div class="c24-container" style="max-width: 1200px; margin: 0 auto; padding: 20px;">
+            <!-- Progress Bar -->
+            <div class="progress-bar">
+                <div class="progress-step completed">
+                    <div class="progress-number">1</div>
+                    <div style="font-size: 14px; font-weight: bold;">Detalles tarifa</div>
+                </div>
+                <div class="progress-step active">
+                    <div class="progress-number">2</div>
+                    <div style="font-size: 14px; font-weight: bold;">Garantías extra</div>
+                </div>
+                <div class="progress-step">
+                    <div class="progress-number">3</div>
+                    <div style="font-size: 14px; font-weight: bold;">Datos contratación</div>
+                </div>
+                <div class="progress-step">
+                    <div class="progress-number">4</div>
+                    <div style="font-size: 14px; font-weight: bold;">Póliza contratada</div>
+                </div>
+            </div>
+
+            <!-- Page Header -->
+            <div class="c24-page-header" style="margin-bottom: 30px; text-align: center;">
+                <h1 style="font-size: 28px; margin-bottom: 10px;">Personaliza tu seguro</h1>
+                <p style="font-size: 16px; color: #666;">Añade coberturas adicionales para protección extra (opcional)</p>
+            </div>
+
+            <!-- Smart Pre-Check Banner -->
+            <div id="precheck-banner" class="precheck-banner">
+                <!-- Loading State -->
+                <div id="precheck-loading" class="precheck-loading">
+                    <div class="precheck-loading-spinner"></div>
+                    <div class="precheck-loading-text">
+                        <div class="precheck-loading-title">
+                            Eligibility Check in Progress<span class="precheck-loading-dots"></span>
+                        </div>
+                        <div class="precheck-loading-subtitle">
+                            Verifying your information with the insurer...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Success State (hidden initially) -->
+                <div id="precheck-success" class="precheck-success" style="display: none;">
+                    <div class="precheck-success-icon">✅</div>
+                    <div class="precheck-success-text">
+                        <div class="precheck-success-title">
+                            Eligibility confirmed by CHECK24
+                        </div>
+                        <div style="font-size: 14px; color: #666;">
+                            All your information has been verified successfully. Your data will be sent to the insurer at the final step.
+                        </div>
+                        <div class="precheck-success-price">
+                            Your estimated price: €762,33/year
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Message Bubble -->
+            <div id="message-bubble" class="precheck-message-bubble" style="display: none;">
+                💡 <strong>Great news!</strong> All your information has been verified successfully. You can now add optional coverages below.
+            </div>
+
+            <div class="c24-personalize-layout" style="display: flex; gap: 30px;">
+                <!-- Sidebar -->
+                <aside class="c24-personalize-sidebar" style="flex: 0 0 320px;">
+                    <div style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: sticky; top: 20px;">
+                        <div style="margin-bottom: 20px;">
+                            <img src="images/logos/prima.svg" alt="Prima" style="height: 40px; margin-bottom: 15px;">
+                            <h3 style="font-size: 16px; margin-bottom: 5px; font-weight: bold;">Prima - Terceros ampliado</h3>
+                        </div>
+
+                        <div style="border-top: 1px solid #EEE; padding-top: 15px; margin-bottom: 15px;">
+                            <div style="font-size: 14px; color: #666; margin-bottom: 10px;">
+                                <strong>Vehículo:</strong><br>
+                                Volkswagen Golf 1.5 TSI
+                            </div>
+                            <div style="font-size: 14px; color: #666; margin-bottom: 10px;">
+                                <strong>Matrícula:</strong><br>
+                                7482BCM
+                            </div>
+                            <div style="font-size: 14px; color: #666; margin-bottom: 10px;">
+                                <strong>Fecha inicio:</strong><br>
+                                01.12.2025
+                            </div>
+                        </div>
+
+                        <hr style="margin: 20px 0; border: none; border-top: 1px solid #EEE;">
+
+                        <!-- Price Summary -->
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="font-size: 16px; margin-bottom: 15px;">Resumen de precio</h4>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px;">
+                                <span>Precio base:</span>
+                                <span>812,33 €</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; color: #2E7D32;">
+                                <span>Descuento CHECK24:</span>
+                                <span>-50,00 €</span>
+                            </div>
+                            <div id="extra-coverages-cost" style="display: none;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px;">
+                                    <span>Garantías extra:</span>
+                                    <span id="extra-cost-value">+0,00 €</span>
+                                </div>
+                            </div>
+
+                            <div style="border-top: 2px solid #EEE; padding-top: 15px; margin-top: 15px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <strong style="font-size: 18px;">Total:</strong>
+                                    <strong style="font-size: 28px; color: #0066CC;" id="total-price">762,33 €</strong>
+                                </div>
+                                <div style="text-align: right; font-size: 12px; color: #666; margin-top: 5px;">al año</div>
+                            </div>
+                        </div>
+
+                        <hr style="margin: 20px 0; border: none; border-top: 1px solid #EEE;">
+
+                        <!-- Contact Info -->
+                        <div style="text-align: center;">
+                            <p style="font-size: 14px; margin-bottom: 10px;">¿Necesitas ayuda?</p>
+                            <p style="font-size: 20px; font-weight: bold; color: #0066CC; margin-bottom: 10px;">911 813 001</p>
+                            <button style="width: 100%; background: white; color: #0066CC; border: 2px solid #0066CC; padding: 10px; border-radius: 4px; font-size: 14px; cursor: pointer;">
+                                Te llamamos
+                            </button>
+                            <p style="font-size: 12px; color: #666; margin-top: 10px;">Lun-Vie: 9:00 - 20:00</p>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Main Content -->
+                <main class="c24-personalize-main" style="flex: 1;">
+                    <div style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <h2 style="font-size: 22px; margin-bottom: 25px;">Garantías opcionales</h2>
+
+                        <!-- Coverage 1: Travel Assistance -->
+                        <div class="coverage-card" id="coverage-travel">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                                <div style="flex: 1;">
+                                    <span class="badge badge-popular">Más contratada</span>
+                                    <h3 style="font-size: 18px; margin-bottom: 10px; font-weight: bold;">Asistencia en viaje completa</h3>
+                                    <p style="color: #666; font-size: 14px; line-height: 1.6;">
+                                        Cobertura completa de asistencia en carretera 24/7 en toda Europa. Incluye remolque ilimitado,
+                                        vehículo de sustitución, gastos de alojamiento hasta 100€/día y repatriación del vehículo.
+                                    </p>
+                                    <ul style="margin-top: 10px; color: #666; font-size: 14px; line-height: 1.8;">
+                                        <li>✓ Asistencia 24/7 en toda Europa</li>
+                                        <li>✓ Remolque ilimitado</li>
+                                        <li>✓ Alojamiento cubierto (hasta 100€/día)</li>
+                                        <li>✓ Gastos de repatriación</li>
+                                    </ul>
+                                </div>
+                                <div style="text-align: right; min-width: 120px; margin-left: 20px;">
+                                    <div style="font-size: 24px; font-weight: bold; color: #0066CC; margin-bottom: 10px;">+41,74 €</div>
+                                    <div style="font-size: 12px; color: #666; margin-bottom: 15px;">al año</div>
+                                    <label style="cursor: pointer;">
+                                        <input type="checkbox" id="check-travel" onchange="toggleCoverage('travel', 41.74)" style="width: 20px; height: 20px; cursor: pointer;">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Coverage 2: Replacement Vehicle -->
+                        <div class="coverage-card" id="coverage-vehicle">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                                <div style="flex: 1;">
+                                    <span class="badge badge-recommended">Recomendada por CHECK24</span>
+                                    <h3 style="font-size: 18px; margin-bottom: 10px; font-weight: bold;">Vehículo de sustitución</h3>
+                                    <p style="color: #666; font-size: 14px; line-height: 1.6;">
+                                        Garantiza tu movilidad con un vehículo de sustitución en caso de avería, accidente o robo.
+                                        Disponible hasta 30 días al año, sin coste adicional por uso.
+                                    </p>
+                                    <ul style="margin-top: 10px; color: #666; font-size: 14px; line-height: 1.8;">
+                                        <li>✓ Vehículo equivalente durante reparación</li>
+                                        <li>✓ Hasta 30 días de uso al año</li>
+                                        <li>✓ Entrega a domicilio</li>
+                                        <li>✓ Sin franquicia</li>
+                                    </ul>
+                                </div>
+                                <div style="text-align: right; min-width: 120px; margin-left: 20px;">
+                                    <div style="font-size: 24px; font-weight: bold; color: #0066CC; margin-bottom: 10px;">+29,99 €</div>
+                                    <div style="font-size: 12px; color: #666; margin-bottom: 15px;">al año</div>
+                                    <label style="cursor: pointer;">
+                                        <input type="checkbox" id="check-vehicle" onchange="toggleCoverage('vehicle', 29.99)" style="width: 20px; height: 20px; cursor: pointer;">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Info Box -->
+                        <div style="background: #F0F7FF; border-left: 4px solid #0066CC; padding: 15px; margin-top: 30px; border-radius: 4px;">
+                            <strong style="color: #0066CC;">💡 Consejo:</strong>
+                            <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">
+                                Estas coberturas son opcionales pero muy recomendadas. Puedes añadirlas ahora o más adelante desde tu área de cliente.
+                            </p>
+                        </div>
+
+                        <!-- Continue Button -->
+                        <div style="margin-top: 40px; padding-top: 30px; border-top: 1px solid #EEE;">
+                            <button onclick="proceedToNextStep()" id="c24es-coverages-button" class="nav-button" style="width: 100%; background: #0066CC; color: white; border: none; padding: 18px; border-radius: 4px; font-size: 18px; font-weight: bold; cursor: pointer; margin-bottom: 15px;">
+                                Continuar
+                            </button>
+                            <div style="text-align: center; font-size: 14px; color: #2E7D32;">
+                                ✓ Tu seguro en menos de 2 minutos
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="c24-footer" style="background: #F5F5F5; padding: 40px 0; margin-top: 60px;">
+        <div class="c24-container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+            <div style="display: flex; justify-content: space-between; gap: 40px;">
+                <div>
+                    <h4>CHECK24</h4>
+                    <p>Comparador de seguros líder en Europa</p>
+                </div>
+                <div>
+                    <h4>Contacto</h4>
+                    <p>911 813 001</p>
+                    <p>Lun-Vie: 9:00 - 20:00</p>
+                </div>
+            </div>
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #DDD; text-align: center; color: #666; font-size: 14px;">
+                <p>© 2024 CHECK24 España - Todos los derechos reservados</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let extraCost = 0;
+        const basePrice = 762.33;
+
+        function toggleCoverage(coverageType, price) {
+            const checkbox = document.getElementById('check-' + coverageType);
+            const card = document.getElementById('coverage-' + coverageType);
+            const extraCoveragesDiv = document.getElementById('extra-coverages-cost');
+            const extraCostValue = document.getElementById('extra-cost-value');
+            const totalPriceElem = document.getElementById('total-price');
+
+            if (checkbox.checked) {
+                card.classList.add('selected');
+                extraCost += price;
+            } else {
+                card.classList.remove('selected');
+                extraCost -= price;
+            }
+
+            // Update display
+            if (extraCost > 0) {
+                extraCoveragesDiv.style.display = 'block';
+                extraCostValue.textContent = '+' + extraCost.toFixed(2) + ' €';
+            } else {
+                extraCoveragesDiv.style.display = 'none';
+            }
+
+            const totalPrice = basePrice + extraCost;
+            totalPriceElem.textContent = totalPrice.toFixed(2) + ' €';
+        }
+
+        function proceedToNextStep() {
+            // Store that eligibility was confirmed
+            localStorage.setItem('sef_eligibility_confirmed', 'true');
+            window.location.href = 'contract-form.html';
+        }
+
+        // Smart Pre-Check Animation
+        window.addEventListener('DOMContentLoaded', function() {
+            // Simulate eligibility check (3 seconds)
+            setTimeout(function() {
+                // Hide loading, show success
+                document.getElementById('precheck-loading').style.display = 'none';
+                document.getElementById('precheck-success').style.display = 'flex';
+
+                // Show message bubble
+                document.getElementById('message-bubble').style.display = 'block';
+            }, 3000);
+        });
+    </script>
+
+</body>
+</html>

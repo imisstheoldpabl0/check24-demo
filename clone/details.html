@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu tarifa de seguros de coche - Prima | CHECK24 España</title>
+    <link rel="stylesheet" href="css/wireframe.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/c24es.css">
+    <style>
+        .c24-search { display: none; }
+        .nav-button {
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .nav-button:hover {
+            opacity: 0.8;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .tab-button {
+            background: white;
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-size: 14px;
+        }
+        .tab-button.active {
+            border-bottom-color: #0066CC;
+            color: #0066CC;
+            font-weight: bold;
+        }
+
+        /* Mini-Form Overlay */
+        .mini-form-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .mini-form-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .mini-form-container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            max-width: 700px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .mini-form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .mini-form-header h2 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .mini-form-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .mini-form-question {
+            margin-bottom: 25px;
+        }
+
+        .mini-form-question label {
+            display: block;
+            font-size: 15px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .mini-form-radio-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .mini-form-radio-option {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .mini-form-radio-option input[type="radio"] {
+            display: none;
+        }
+
+        .mini-form-radio-label {
+            display: block;
+            padding: 12px 20px;
+            border: 2px solid #DDD;
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .mini-form-radio-option input[type="radio"]:checked + .mini-form-radio-label {
+            background: #E3F2FD;
+            border-color: #0066CC;
+            color: #0066CC;
+            font-weight: bold;
+        }
+
+        .mini-form-radio-label:hover {
+            border-color: #0066CC;
+        }
+
+        .mini-form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #DDD;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .mini-form-select:focus {
+            outline: none;
+            border-color: #0066CC;
+        }
+
+        .mini-form-button {
+            width: 100%;
+            background: #0066CC;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.2s;
+        }
+
+        .mini-form-button:hover {
+            background: #0052A3;
+        }
+
+        .mini-form-button:disabled {
+            background: #CCC;
+            cursor: not-allowed;
+        }
+
+        .mini-form-progress {
+            text-align: center;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        /* Verification Modal */
+        .verification-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 10001;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .verification-modal.active {
+            display: flex;
+        }
+
+        .verification-content {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .verification-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .verification-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid #E0E0E0;
+            border-top: 5px solid #0066CC;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        .verification-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .verification-message {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .verification-warning {
+            background: #FFF3CD;
+            border-left: 4px solid #FFB400;
+            padding: 20px;
+            border-radius: 6px;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .verification-warning-title {
+            color: #856404;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .verification-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #DDD;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .verification-input:focus {
+            outline: none;
+            border-color: #0066CC;
+        }
+
+        .verification-button {
+            background: #0066CC;
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .verification-button:hover {
+            background: #0052A3;
+        }
+
+        .verification-success {
+            background: #E8F5E9;
+            border-left: 4px solid #2E7D32;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .verification-success-text {
+            color: #2E7D32;
+            font-weight: bold;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="c24-body c24-wide c24-fluid-grid">
+
+    <!-- Insurer-Specific Mini-Form Overlay -->
+    <div id="mini-form-overlay" class="mini-form-overlay">
+        <div class="mini-form-container">
+            <div class="mini-form-header">
+                <img id="mini-form-logo" src="images/logos/prima.svg" alt="Insurer" style="height: 50px; margin-bottom: 15px;">
+                <h2>Before viewing full details...</h2>
+                <p>Please answer a few insurer-specific questions to ensure accurate pricing and eligibility.</p>
+            </div>
+
+            <div class="mini-form-progress">Question <span id="current-question">1</span> of 5</div>
+
+            <form id="mini-form">
+                <!-- Question 1 -->
+                <div class="mini-form-question" data-question="1">
+                    <label>Have you been claim-free in the last 5 years?</label>
+                    <div class="mini-form-radio-group">
+                        <div class="mini-form-radio-option">
+                            <input type="radio" name="q1" id="q1-yes" value="yes" required>
+                            <label for="q1-yes" class="mini-form-radio-label">Yes</label>
+                        </div>
+                        <div class="mini-form-radio-option">
+                            <input type="radio" name="q1" id="q1-no" value="no">
+                            <label for="q1-no" class="mini-form-radio-label">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="mini-form-question" data-question="2">
+                    <label>Is there a secondary driver under 25?</label>
+                    <div class="mini-form-radio-group">
+                        <div class="mini-form-radio-option">
+                            <input type="radio" name="q2" id="q2-yes" value="yes" required>
+                            <label for="q2-yes" class="mini-form-radio-label">Yes</label>
+                        </div>
+                        <div class="mini-form-radio-option">
+                            <input type="radio" name="q2" id="q2-no" value="no">
+                            <label for="q2-no" class="mini-form-radio-label">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="mini-form-question" data-question="3">
+                    <label>Is the vehicle used for business purposes?</label>
+                    <div class="mini-form-radio-group">
+                        <div class="mini-form-radio-option">
+                            <input type="radio" name="q3" id="q3-yes" value="yes" required>
+                            <label for="q3-yes" class="mini-form-radio-label">Yes</label>
+                        </div>
+                        <div class="mini-form-radio-option">
+                            <input type="radio" name="q3" id="q3-no" value="no">
+                            <label for="q3-no" class="mini-form-radio-label">No</label>
+                        </div>
+                        <div class="mini-form-radio-option">
+                            <input type="radio" name="q3" id="q3-sometimes" value="sometimes">
+                            <label for="q3-sometimes" class="mini-form-radio-label">Sometimes</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 4 -->
+                <div class="mini-form-question" data-question="4">
+                    <label>How many years have you had your driver's license?</label>
+                    <select name="q4" class="mini-form-select" required>
+                        <option value="">Select years</option>
+                        <option value="0-2">0-2 years</option>
+                        <option value="2-5">2-5 years</option>
+                        <option value="5-10">5-10 years</option>
+                        <option value="10+">More than 10 years</option>
+                    </select>
+                </div>
+
+                <!-- Question 5 -->
+                <div class="mini-form-question" data-question="5">
+                    <label>Has the vehicle been modified from the factory model?</label>
+                    <div class="mini-form-radio-group">
+                        <div class="mini-form-radio-option">
+                            <input type="radio" name="q5" id="q5-yes" value="yes" required>
+                            <label for="q5-yes" class="mini-form-radio-label">Yes</label>
+                        </div>
+                        <div class="mini-form-radio-option">
+                            <input type="radio" name="q5" id="q5-no" value="no">
+                            <label for="q5-no" class="mini-form-radio-label">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="mini-form-button" id="mini-form-submit">
+                    Confirmar
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Data Verification Modal -->
+    <div id="verification-modal" class="verification-modal">
+        <div class="verification-content" id="verification-content">
+            <!-- Loading State -->
+            <div id="verification-loading">
+                <div class="verification-spinner"></div>
+                <div class="verification-title">Verifying your data...</div>
+                <div class="verification-message">
+                    We're checking your information with official sources to ensure accuracy.
+                </div>
+            </div>
+
+            <!-- Mismatch State -->
+            <div id="verification-mismatch" style="display: none;">
+                <div class="verification-icon">⚠️</div>
+                <div class="verification-title">Data Mismatch Detected</div>
+                <div class="verification-warning">
+                    <div class="verification-warning-title">We found a mismatch in your driving record</div>
+                    <div class="verification-message">
+                        Please confirm your current driver's license points to continue.
+                    </div>
+                </div>
+                <input type="number" id="license-points" class="verification-input"
+                       placeholder="Enter your license points (0-12)" min="0" max="12">
+                <button class="verification-button" onclick="handleVerificationCorrection()">
+                    Confirm & Continue
+                </button>
+            </div>
+
+            <!-- Success State -->
+            <div id="verification-success" style="display: none;">
+                <div class="verification-icon">✅</div>
+                <div class="verification-title">Data Verified Successfully</div>
+                <div class="verification-success">
+                    <div class="verification-success-text">
+                        All your information has been verified with official sources.
+                    </div>
+                </div>
+                <button class="verification-button" onclick="proceedToPersonalize()">
+                    Continue to Next Step
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="c24-header">
+        <div class="c24-header-content">
+            <div class="c24-logo">
+                <img src="images/logos/check24.svg" alt="CHECK24" style="height: 40px;">
+            </div>
+            <nav class="c24-navigation">
+                <a href="#">Área clientes</a>
+                <a href="#">Ayuda</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div id="c24es-app">
+        <div class="c24-container" style="max-width: 1200px; margin: 0 auto; padding: 20px;">
+            <!-- Breadcrumb -->
+            <div class="c24-breadcrumb" style="margin-bottom: 20px;">
+                <a href="results.html" style="color: #0066CC; text-decoration: none;">← volver a la lista de resultados</a>
+            </div>
+
+            <!-- Product Header -->
+            <div class="c24-product-header" style="margin-bottom: 30px;">
+                <h1 style="font-size: 28px; margin-bottom: 10px;">Tu tarifa de seguros de coche</h1>
+                <p style="font-size: 16px; color: #666;">Volkswagen Golf 1.5 TSI - 7482BCM</p>
+            </div>
+
+            <div class="c24-detail-layout" style="display: flex; gap: 30px;">
+                <!-- Main Content -->
+                <main class="c24-detail-main" style="flex: 1;">
+                    <!-- Tariff Card -->
+                    <div class="c24-tariff-card" style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 30px;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+                            <div>
+                                <img id="insurer-logo-main" src="images/logos/prima.svg" alt="Prima" style="height: 50px; margin-bottom: 15px;">
+                                <h2 style="font-size: 24px; margin-bottom: 10px; line-height: 1.2;">Terceros ampliado</h2>
+                            </div>
+                            <div style="text-align: right; min-width: 150px;">
+                                <div id="old-price" style="font-size: 14px; color: #666; text-decoration: line-through; margin-bottom: 8px;">812,33 €</div>
+                                <div id="current-price" style="font-size: 32px; font-weight: bold; color: #0066CC; line-height: 1.1; margin-bottom: 8px;">762,33 €</div>
+                                <div style="font-size: 13px; color: #666;">al año</div>
+                            </div>
+                        </div>
+
+                        <!-- Customer Satisfaction -->
+                        <div style="background: #F5F5F5; padding: 20px; border-radius: 6px; margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                <div>
+                                    <h3 style="font-size: 16px; margin-bottom: 5px; line-height: 1.3;">Satisfacción del cliente</h3>
+                                    <p style="color: #666; font-size: 14px; margin: 0;">Basado en opiniones de clientes reales</p>
+                                </div>
+                                <div style="text-align: right; min-width: 120px;">
+                                    <div id="satisfaction-score" style="font-size: 28px; font-weight: bold; color: #2E7D32; line-height: 1.1; margin-bottom: 5px;">8.0</div>
+                                    <div id="satisfaction-percent" style="font-size: 13px; color: #666;">72% satisfacción</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Key Features -->
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="font-size: 18px; margin-bottom: 15px;">Características principales</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="padding: 10px 0; border-bottom: 1px solid #EEE;">
+                                    <strong>✓ Asistencia en carretera 24h</strong>
+                                    <p style="color: #666; margin: 5px 0 0 0;">Cobertura completa en toda España</p>
+                                </li>
+                                <li style="padding: 10px 0; border-bottom: 1px solid #EEE;">
+                                    <strong>✓ Defensa jurídica incluida</strong>
+                                    <p style="color: #666; margin: 5px 0 0 0;">Hasta 3.000€ de cobertura legal</p>
+                                </li>
+                                <li style="padding: 10px 0; border-bottom: 1px solid #EEE;">
+                                    <strong>✓ Lunas incluidas</strong>
+                                    <p style="color: #666; margin: 5px 0 0 0;">Reparación y sustitución sin franquicia</p>
+                                </li>
+                                <li style="padding: 10px 0;">
+                                    <strong>✓ Responsabilidad civil</strong>
+                                    <p style="color: #666; margin: 5px 0 0 0;">Cobertura ilimitada</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Information Tabs -->
+                    <div class="c24-tabs" style="background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <div class="c24-tabs-header" style="display: flex; border-bottom: 1px solid #EEE; padding: 0 20px;">
+                            <button class="tab-button active" onclick="switchTab('general')">Información general</button>
+                            <button class="tab-button" onclick="switchTab('coverage')">Coberturas básicas</button>
+                            <button class="tab-button" onclick="switchTab('assistance')">Asistencia y movilidad</button>
+                            <button class="tab-button" onclick="switchTab('protection')">Protección del vehículo</button>
+                            <button class="tab-button" onclick="switchTab('reviews')">Opiniones</button>
+                        </div>
+
+                        <div class="c24-tabs-content" style="padding: 30px;">
+                            <!-- General Info Tab -->
+                            <div id="general" class="tab-content active">
+                                <h3 style="font-size: 20px; margin-bottom: 20px;">Información general</h3>
+                                <table style="width: 100%;">
+                                    <tr style="border-bottom: 1px solid #EEE;">
+                                        <td style="padding: 15px 0; font-weight: bold;">Compañía</td>
+                                        <td style="padding: 15px 0;">Prima</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #EEE;">
+                                        <td style="padding: 15px 0; font-weight: bold;">Modalidad</td>
+                                        <td style="padding: 15px 0;">Terceros ampliado</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #EEE;">
+                                        <td style="padding: 15px 0; font-weight: bold;">Franquicia</td>
+                                        <td style="padding: 15px 0;">Sin franquicia</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #EEE;">
+                                        <td style="padding: 15px 0; font-weight: bold;">Forma de pago</td>
+                                        <td style="padding: 15px 0;">Anual</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 15px 0; font-weight: bold;">Fecha de inicio</td>
+                                        <td style="padding: 15px 0;">01.12.2025</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <!-- Coverage Tab -->
+                            <div id="coverage" class="tab-content">
+                                <h3 style="font-size: 20px; margin-bottom: 20px;">Coberturas básicas</h3>
+                                <ul style="list-style: none; padding: 0;">
+                                    <li style="padding: 15px; background: #F5F5F5; margin-bottom: 10px; border-radius: 4px;">
+                                        <strong>Responsabilidad Civil</strong>
+                                        <p style="margin: 5px 0 0 0; color: #666;">Cobertura ilimitada para daños a terceros</p>
+                                    </li>
+                                    <li style="padding: 15px; background: #F5F5F5; margin-bottom: 10px; border-radius: 4px;">
+                                        <strong>Defensa Jurídica</strong>
+                                        <p style="margin: 5px 0 0 0; color: #666;">Hasta 3.000€ en gastos legales</p>
+                                    </li>
+                                    <li style="padding: 15px; background: #F5F5F5; margin-bottom: 10px; border-radius: 4px;">
+                                        <strong>Rotura de Lunas</strong>
+                                        <p style="margin: 5px 0 0 0; color: #666;">Reparación y sustitución sin franquicia</p>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- Assistance Tab -->
+                            <div id="assistance" class="tab-content">
+                                <h3 style="font-size: 20px; margin-bottom: 20px;">Asistencia y movilidad</h3>
+                                <ul style="list-style: none; padding: 0;">
+                                    <li style="padding: 15px; background: #F5F5F5; margin-bottom: 10px; border-radius: 4px;">
+                                        <strong>Asistencia en Carretera 24/7</strong>
+                                        <p style="margin: 5px 0 0 0; color: #666;">Remolque, reparación in situ, y traslado de pasajeros</p>
+                                    </li>
+                                    <li style="padding: 15px; background: #F5F5F5; margin-bottom: 10px; border-radius: 4px;">
+                                        <strong>Gastos de Desplazamiento</strong>
+                                        <p style="margin: 5px 0 0 0; color: #666;">Hasta 100€ en caso de avería fuera del domicilio</p>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- Protection Tab -->
+                            <div id="protection" class="tab-content">
+                                <h3 style="font-size: 20px; margin-bottom: 20px;">Protección del vehículo</h3>
+                                <p style="color: #666;">Esta modalidad no incluye daños propios. Para una cobertura completa del vehículo, considera la opción "Todo riesgo".</p>
+                            </div>
+
+                            <!-- Reviews Tab -->
+                            <div id="reviews" class="tab-content">
+                                <h3 style="font-size: 20px; margin-bottom: 20px;">Opiniones de clientes</h3>
+                                <div style="background: #F5F5F5; padding: 20px; border-radius: 4px; margin-bottom: 15px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                        <strong>Juan M.</strong>
+                                        <span style="color: #FFB400;">★★★★☆ 8/10</span>
+                                    </div>
+                                    <p style="color: #666;">"Buen servicio y precios competitivos. El proceso de contratación fue rápido y sencillo."</p>
+                                </div>
+                                <div style="background: #F5F5F5; padding: 20px; border-radius: 4px; margin-bottom: 15px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                        <strong>María G.</strong>
+                                        <span style="color: #FFB400;">★★★★☆ 8/10</span>
+                                    </div>
+                                    <p style="color: #666;">"Buena atención al cliente. Respondieron rápido a mis dudas."</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+
+                <!-- Sidebar -->
+                <aside class="c24-detail-sidebar" style="flex: 0 0 320px;">
+                    <!-- Price Summary -->
+                    <div class="c24-price-summary" style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px; position: sticky; top: 20px;">
+                        <div style="margin-bottom: 20px;">
+                            <img id="insurer-logo-sidebar" src="images/logos/prima.svg" alt="Prima" style="height: 40px; margin-bottom: 10px;">
+                            <h3 style="font-size: 16px; margin-bottom: 5px;">Terceros ampliado</h3>
+                        </div>
+
+                        <div style="border-top: 1px solid #EEE; border-bottom: 1px solid #EEE; padding: 15px 0; margin-bottom: 15px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span>Precio base:</span>
+                                <span id="sidebar-old-price">812,33 €</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; color: #2E7D32; font-weight: bold;">
+                                <span>Descuento CHECK24:</span>
+                                <span>-50,00 €</span>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                            <strong style="font-size: 18px;">Total:</strong>
+                            <strong id="sidebar-current-price" style="font-size: 24px; color: #0066CC;">762,33 €</strong>
+                        </div>
+
+                        <div style="text-align: center; margin-bottom: 15px;">
+                            <div style="font-size: 12px; color: #666; margin-bottom: 5px;">al año</div>
+                            <div style="font-size: 12px; color: #666;">o 63,53 € al mes</div>
+                        </div>
+
+                        <button onclick="startVerification()" id="fsl_continue_rp" class="nav-button" style="width: 100%; background: #0066CC; color: white; border: none; padding: 15px; border-radius: 4px; font-size: 18px; font-weight: bold; cursor: pointer; margin-bottom: 15px;">
+                            Continuar
+                        </button>
+
+                        <div style="text-align: center; font-size: 12px; color: #2E7D32; margin-bottom: 20px;">
+                            ✓ Tu seguro en menos de 2 minutos
+                        </div>
+
+                        <hr style="margin: 20px 0; border: none; border-top: 1px solid #EEE;">
+
+                        <!-- Contact -->
+                        <div style="text-align: center;">
+                            <p style="font-size: 14px; margin-bottom: 10px;">¿Tienes dudas?</p>
+                            <p style="font-size: 20px; font-weight: bold; color: #0066CC; margin-bottom: 10px;">911 813 001</p>
+                            <button style="width: 100%; background: white; color: #0066CC; border: 2px solid #0066CC; padding: 10px; border-radius: 4px; font-size: 14px; cursor: pointer;">
+                                Te llamamos
+                            </button>
+                            <p style="font-size: 12px; color: #666; margin-top: 10px;">Lun-Vie: 9:00 - 20:00</p>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="c24-footer" style="background: #F5F5F5; padding: 40px 0; margin-top: 60px;">
+        <div class="c24-container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+            <div style="display: flex; justify-content: space-between; gap: 40px;">
+                <div>
+                    <h4>CHECK24</h4>
+                    <p>Comparador de seguros líder en Europa</p>
+                </div>
+                <div>
+                    <h4>Contacto</h4>
+                    <p>911 813 001</p>
+                    <p>Lun-Vie: 9:00 - 20:00</p>
+                </div>
+            </div>
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #DDD; text-align: center; color: #666; font-size: 14px;">
+                <p>© 2024 CHECK24 España - Todos los derechos reservados</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Tab switching function
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Insurer data
+        const insurerData = {
+            'Prima': {
+                oldPrice: '812,33 €',
+                currentPrice: '762,33 €',
+                satisfactionScore: '8.0',
+                satisfactionPercent: '72% satisfacción'
+            },
+            'Allianz': {
+                oldPrice: '895,50 €',
+                currentPrice: '845,50 €',
+                satisfactionScore: '8.5',
+                satisfactionPercent: '85% satisfacción'
+            },
+            'MAPFRE': {
+                oldPrice: '942,00 €',
+                currentPrice: '892,00 €',
+                satisfactionScore: '8.2',
+                satisfactionPercent: '78% satisfacción'
+            },
+            'AXA': {
+                oldPrice: '970,75 €',
+                currentPrice: '920,75 €',
+                satisfactionScore: '8.3',
+                satisfactionPercent: '80% satisfacción'
+            }
+        };
+
+        // Mini-form handling
+        window.addEventListener('DOMContentLoaded', function() {
+            const overlay = document.getElementById('mini-form-overlay');
+            const miniForm = document.getElementById('mini-form');
+            const urlParams = new URLSearchParams(window.location.search);
+            const insurerName = urlParams.get('insurer') || localStorage.getItem('sef_selected_insurer') || 'Prima';
+
+            // Get insurer data
+            const insurer = insurerData[insurerName] || insurerData['Prima'];
+
+            // Update all dynamic content
+            const logoPath = 'images/logos/' + insurerName.toLowerCase() + '.svg';
+
+            // Update mini-form logo
+            const logo = document.getElementById('mini-form-logo');
+            logo.src = logoPath;
+            logo.alt = insurerName;
+
+            // Update main page logos
+            document.getElementById('insurer-logo-main').src = logoPath;
+            document.getElementById('insurer-logo-main').alt = insurerName;
+            document.getElementById('insurer-logo-sidebar').src = logoPath;
+            document.getElementById('insurer-logo-sidebar').alt = insurerName;
+
+            // Update prices
+            document.getElementById('old-price').textContent = insurer.oldPrice;
+            document.getElementById('current-price').textContent = insurer.currentPrice;
+            document.getElementById('sidebar-old-price').textContent = insurer.oldPrice;
+            document.getElementById('sidebar-current-price').textContent = insurer.currentPrice;
+
+            // Update satisfaction
+            document.getElementById('satisfaction-score').textContent = insurer.satisfactionScore;
+            document.getElementById('satisfaction-percent').textContent = insurer.satisfactionPercent;
+
+            // Check if mini-form was already completed OR if offer is pre-approved
+            const miniFormCompleted = localStorage.getItem('sef_miniform_completed');
+            const isPreApproved = localStorage.getItem('sef_is_preapproved');
+
+            if (miniFormCompleted === 'true' || isPreApproved === 'true') {
+                overlay.classList.add('hidden');
+            }
+
+            // Handle form submission
+            miniForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Store answers
+                const formData = new FormData(miniForm);
+                const answers = {};
+                for (let [key, value] of formData.entries()) {
+                    answers[key] = value;
+                }
+                localStorage.setItem('sef_miniform_answers', JSON.stringify(answers));
+                localStorage.setItem('sef_miniform_completed', 'true');
+
+                // Hide overlay with animation
+                overlay.classList.add('hidden');
+            });
+        });
+
+        // Data Verification Functions
+        function startVerification() {
+            const modal = document.getElementById('verification-modal');
+            modal.classList.add('active');
+
+            // Show loading state
+            document.getElementById('verification-loading').style.display = 'block';
+            document.getElementById('verification-mismatch').style.display = 'none';
+            document.getElementById('verification-success').style.display = 'none';
+
+            // Simulate verification delay (2 seconds)
+            setTimeout(function() {
+                // Hide loading, show mismatch
+                document.getElementById('verification-loading').style.display = 'none';
+                document.getElementById('verification-mismatch').style.display = 'block';
+            }, 2000);
+        }
+
+        function handleVerificationCorrection() {
+            const licensePoints = document.getElementById('license-points').value;
+
+            if (!licensePoints || licensePoints < 0 || licensePoints > 12) {
+                alert('Please enter valid license points (0-12)');
+                return;
+            }
+
+            // Store corrected data
+            localStorage.setItem('sef_license_points', licensePoints);
+            localStorage.setItem('sef_data_verified', 'true');
+
+            // Show success state
+            document.getElementById('verification-mismatch').style.display = 'none';
+            document.getElementById('verification-success').style.display = 'block';
+        }
+
+        function proceedToPersonalize() {
+            window.location.href = 'personalize.html';
+        }
+    </script>
+
+</body>
+</html>

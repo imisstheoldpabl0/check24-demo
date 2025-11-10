@@ -1,0 +1,10 @@
+/** CHANGING LAYOUT CSS **/
+
+.hp-outer{font-size:12px}
+.hp-outer .hp-container{margin-bottom:15px;line-height:16px}
+.hp-outer .hp-container:last-child{margin-bottom:0}
+.hp-outer .hp-title{font-weight:700}
+.hp-outer .hp-title .goldclub-hotline{color:#9f8749;display:inline-block}
+.hp-outer .hp-telephone{margin-top:15px}
+.hp-outer .hp-telephone>a{font-weight:700;color:#005ea8}
+.hp-outer .hp-telephone>span{font-size:.88em}

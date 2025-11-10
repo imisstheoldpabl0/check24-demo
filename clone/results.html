@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="es" id="c24-html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Comparativa | CHECK24 España</title>
+    <link rel="stylesheet" href="css/wireframe.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/c24es.css">
+    <style>
+        .c24-search { display: none; }
+
+        /* Gratification Bar */
+        .c24es-gratification-bar {
+            background: linear-gradient(90deg, #FFD54F 0%, #FFA726 100%);
+            padding: 12px 20px;
+            text-align: center;
+            font-weight: bold;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .c24es-gratification-bar__content-icon {
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        /* Results Header */
+        .c24es-results-header {
+            background: white;
+            padding: 30px 20px;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        .c24es-results-header__info h1 {
+            font-size: 32px;
+            margin: 0 0 10px 0;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .c24es-results__resume {
+            color: #666;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        .c24es-results-header__info-change a {
+            color: #0066CC;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .c24es-results-header__info-change a:hover {
+            text-decoration: underline;
+        }
+
+        /* Seals */
+        .c24es-seals {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .c24es-seal {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .c24es-seal-icon {
+            width: 24px;
+            height: 24px;
+            color: #7ab51d;
+        }
+
+        /* Page Layout */
+        .c24es-page__body {
+            display: flex;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .c24es-page__body aside {
+            flex: 0 0 300px;
+        }
+
+        .c24es-page__body main {
+            flex: 1;
+        }
+
+        /* Filters */
+        .c24es-filters {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .c24es-filters h2 {
+            font-size: 18px;
+            margin: 0 0 20px 0;
+            font-weight: bold;
+        }
+
+        .c24es-filter__modality {
+            margin-bottom: 25px;
+        }
+
+        .c24es-filter__modality h3 {
+            font-size: 14px;
+            margin: 0 0 12px 0;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .c24es-modality-selector__option {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border: 2px solid #E0E0E0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .c24es-modality-selector__option:hover {
+            border-color: #0066CC;
+        }
+
+        .c24es-modality-selector__option--active {
+            background: #E3F2FD;
+            border-color: #0066CC;
+        }
+
+        .c24es-modality-selector__title {
+            font-weight: 500;
+        }
+
+        .c24es-modality-selector__price {
+            font-weight: bold;
+            color: #0066CC;
+        }
+
+        .c24es-filter__installments h3,
+        .c24es-coverages-list h3 {
+            font-size: 14px;
+            margin: 20px 0 12px 0;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .c24es-filter__installments ul,
+        .c24es-coverages-list__items {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .c24es-filter__installments li {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            cursor: pointer;
+        }
+
+        .c24es-filter--active {
+            font-weight: bold;
+            color: #0066CC;
+        }
+
+        .c24es-filter__count {
+            color: #999;
+            font-size: 13px;
+        }
+
+        /* Results Items */
+        .c24es-results-item {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 15px;
+            transition: box-shadow 0.2s;
+        }
+
+        .c24es-results-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        .c24es-results-item__container {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+        }
+
+        .c24es-results-item__left {
+            flex: 1;
+        }
+
+        .c24es-results-item__right {
+            flex: 0 0 250px;
+            text-align: right;
+        }
+
+        .c24es-results-item__company {
+            margin-bottom: 15px;
+        }
+
+        .c24es-results-item__company img {
+            height: 45px;
+            max-width: 150px;
+        }
+
+        .c24es-results-item__type {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #333;
+        }
+
+        .c24es-details__item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .c24es-details__item-icon {
+            margin-right: 8px;
+            color: #7ab51d;
+        }
+
+        .c24es-satisfaction {
+            display: inline-block;
+            background: #E8F5E9;
+            color: #2E7D32;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+
+        .c24es-price {
+            margin-bottom: 15px;
+        }
+
+        .c24es-price__old {
+            font-size: 14px;
+            color: #999;
+            text-decoration: line-through;
+            margin-bottom: 5px;
+        }
+
+        .c24es-price__current {
+            font-size: 36px;
+            font-weight: bold;
+            color: #0066CC;
+            line-height: 1;
+        }
+
+        .c24es-price__period {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .c24es-button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: #0066CC;
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #0052A3;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #0066CC;
+            border: 2px solid #0066CC;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: #F0F7FF;
+        }
+
+        /* Eligibility Badges */
+        .eligibility-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .eligibility-pending {
+            background: #E0E0E0;
+            color: #666;
+        }
+
+        .eligibility-preapproved {
+            background: #C8E6C9;
+            color: #2E7D32;
+        }
+
+        .eligibility-info-required {
+            background: #FFF3CD;
+            color: #856404;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loading-content {
+            background: white;
+            padding: 40px 60px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #E0E0E0;
+            border-top: 4px solid #0066CC;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 18px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        /* Recovery Banner */
+        .recovery-banner {
+            background: linear-gradient(135deg, #FFF3CD 0%, #FFE0B2 100%);
+            padding: 20px;
+            text-align: center;
+            font-weight: bold;
+            color: #856404;
+            font-size: 16px;
+            border-bottom: 2px solid #FFB400;
+            display: none;
+        }
+
+        .recovery-banner.active {
+            display: block;
+        }
+
+        .recovery-banner-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        /* Remove white logo background from CSS */
+        .c24-logo {
+            background-image: none !important;
+        }
+    </style>
+</head>
+<body class="c24-body c24-wide c24-fluid-grid">
+
+    <!-- Header -->
+    <header class="c24-header" style="background: linear-gradient(90deg, #FFD54F 0%, #FFA726 100%); border-bottom: none; padding: 15px 0;">
+        <div class="c24-header-content" style="max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center;">
+            <div class="c24-logo">
+                <img src="images/logos/check24.svg" alt="CHECK24" style="height: 45px;">
+            </div>
+            <nav class="c24-navigation" style="display: flex; gap: 25px; align-items: center;">
+                <a href="#" style="color: #333; text-decoration: none; font-size: 14px;">Mi cuenta</a>
+                <a href="#" style="color: #333; text-decoration: none; font-size: 14px;">Ayuda</a>
+                <span style="color: #666; font-size: 14px;">+34 924 924 050</span>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div id="c24es-app">
+        <!-- Recovery Banner (shown after rejection) -->
+        <div id="recovery-banner" class="recovery-banner">
+            <span class="recovery-banner-icon">⚠️</span>
+            <span>We've filtered results to show only insurers that pre-approved your profile.</span>
+        </div>
+
+        <!-- Gratification Bar -->
+        <div id="c24es-gratification-bar" class="c24es-gratification-bar">
+            <div class="c24es-gratification-bar__content">
+                <span class="c24es-gratification-bar__content-icon">🎁</span>
+                <span class="c24es-gratification-bar__content-text">50 € de regalo por contratar tu seguro de coche</span>
+            </div>
+        </div>
+
+        <!-- Results Header -->
+        <section class="c24es-results-header">
+            <div style="max-width: 1400px; margin: 0 auto; padding: 0 20px;">
+                <div class="c24es-results-header__info">
+                    <h1 class="c24es-results">
+                        Comparación de seguros de coche <span style="font-weight: normal; color: #666;">para tu</span> Volkswagen Golf
+                    </h1>
+                    <div class="c24es-results__resume">8 de 263 tarifas</div>
+                    <div class="c24es-results-header__info-change">
+                        <a>« cambiar datos</a>
+                    </div>
+                </div>
+
+                <!-- Trust Seals -->
+                <div class="c24es-seals">
+                    <div class="c24es-seal">
+                        <svg class="c24es-seal-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                        <span>Garantía de mejor precio</span>
+                    </div>
+                    <div class="c24es-seal">
+                        <svg class="c24es-seal-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                        <span>100% online</span>
+                    </div>
+                    <div class="c24es-seal">
+                        <svg class="c24es-seal-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                        <span>Precio final confirmado</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content Area -->
+        <div class="c24es-page__body c24es-view__results">
+            <!-- Filters Sidebar -->
+            <aside>
+                <section class="c24es-filters">
+                    <h2><span>Filtrar resultados</span></h2>
+
+                    <!-- Modality Filter -->
+                    <div class="c24es-filter__modality">
+                        <h3><span class="title">Modalidad</span></h3>
+                        <div class="c24es-modality-selector">
+                            <div class="c24es-modality-selector__option">
+                                <span class="c24es-modality-selector__title">Terceros básico</span>
+                                <span class="c24es-modality-selector__price">311 €</span>
+                            </div>
+                            <div class="c24es-modality-selector__option c24es-modality-selector__option--active">
+                                <span class="c24es-modality-selector__title">Terceros ampliado</span>
+                                <span class="c24es-modality-selector__price">392 €</span>
+                            </div>
+                            <div class="c24es-modality-selector__option">
+                                <span class="c24es-modality-selector__title">Todo riesgo</span>
+                                <span class="c24es-modality-selector__price">713 €</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Filter -->
+                    <div class="c24es-filter__installments">
+                        <h3><span class="title">Pago fraccionado</span></h3>
+                        <ul>
+                            <li class="c24es-filter--active">
+                                <span class="c24es-filter__label">Anual</span>
+                                <span class="c24es-filter__count">(8)</span>
+                            </li>
+                            <li>
+                                <span class="c24es-filter__label">Semestral</span>
+                                <span class="c24es-filter__count">(7)</span>
+                            </li>
+                            <li>
+                                <span class="c24es-filter__label">Trimestral</span>
+                                <span class="c24es-filter__count">(4)</span>
+                            </li>
+                            <li>
+                                <span class="c24es-filter__label">Mensual</span>
+                                <span class="c24es-filter__count">(1)</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Coverage Filter -->
+                    <div class="c24es-coverages-list">
+                        <h3><span class="title">Coberturas</span></h3>
+                        <ul class="c24es-coverages-list__items">
+                            <li style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px;">
+                                <span>Rotura de lunas</span>
+                                <span class="c24es-filter__count">(8)</span>
+                            </li>
+                            <li style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px;">
+                                <span>Defensa jurídica</span>
+                                <span class="c24es-filter__count">(8)</span>
+                            </li>
+                            <li style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px;">
+                                <span>Asistencia completa</span>
+                                <span class="c24es-filter__count">(6)</span>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+            </aside>
+
+            <!-- Results Main Area -->
+            <main>
+                <!-- Result Item 1: Prima -->
+                <article class="c24es-results-item">
+                    <div class="c24es-results-item__container">
+                        <div class="c24es-results-item__left">
+                            <div class="c24es-results-item__company">
+                                <img src="images/logos/prima.svg" alt="Prima">
+                            </div>
+                            <div class="eligibility-badge eligibility-info-required">⚠ More info required</div>
+                            <div class="c24es-results-item__type">Terceros ampliado</div>
+                            <div class="c24es-details__item">
+                                <span class="c24es-details__item-icon">✓</span>
+                                <span>Asistencia en carretera 24h</span>
+                            </div>
+                            <div class="c24es-details__item">
+                                <span class="c24es-details__item-icon">✓</span>
+                                <span>Defensa jurídica incluida</span>
+                            </div>
+                            <div class="c24es-details__item">
+                                <span class="c24es-details__item-icon">✓</span>
+                                <span>Lunas incluidas</span>
+                            </div>
+                            <div class="c24es-satisfaction">
+                                Satisfacción: 72% (8.0)
+                            </div>
+                        </div>
+                        <div class="c24es-results-item__right">
+                            <div class="c24es-price">
+                                <div class="c24es-price__old">812,33 €</div>
+                                <div class="c24es-price__current">762,33 €</div>
+                                <div class="c24es-price__period">al año (Estimated: €750–€780)</div>
+                            </div>
+                            <div class="c24es-button-group">
+                                <button class="btn-primary" onclick="handleContractClick('Prima', false)">Contratar Online</button>
+                                <button class="btn-secondary" onclick="handleContractClick('Prima', false)">Ver detalles</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Result Item 2: Allianz -->
+                <article class="c24es-results-item">
+                    <div class="c24es-results-item__container">
+                        <div class="c24es-results-item__left">
+                            <div class="c24es-results-item__company">
+                                <img src="images/logos/allianz.svg" alt="Allianz">
+                            </div>
+                            <div class="eligibility-badge eligibility-info-required">⚠ More info required</div>
+                            <div class="c24es-results-item__type">Terceros ampliado</div>
+                            <div class="c24es-details__item">
+                                <span class="c24es-details__item-icon">✓</span>
+                                <span>Asistencia premium 24h</span>
+                            </div>
+                            <div class="c24es-details__item">
+                                <span class="c24es-details__item-icon">✓</span>
+                                <span>Defensa jurídica incluida</span>
+                            </div>
+                            <div class="c24es-details__item">
+                                <span class="c24es-details__item-icon">✓</span>
+                                <span>Cobertura de lunas</span>
+                            </div>
+                            <div class="c24es-satisfaction">
+                                Satisfacción: 85% (8.5)
+                            </div>
+                        </div>
+                        <div class="c24es-results-item__right">
+                            <div class="c24es-price">
+                                <div class="c24es-price__current">845,50 €</div>
+                                <div class="c24es-price__period">al año (Estimated: €820–€870)</div>
+                            </div>
+                            <div class="c24es-button-group">
+                                <button class="btn-primary" onclick="handleContractClick('Allianz', false)">Contratar Online</button>
+                                <button class="btn-secondary" onclick="handleContractClick('Allianz', false)">Ver detalles</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Result Item 3: MAPFRE -->
+                <article class="c24es-results-item">
+                    <div class="c24es-results-item__container">
+                        <div class="c24es-results-item__left">
+                            <div class="c24es-results-item__company">
+                                <img src="images/logos/mapfre.svg" alt="MAPFRE">
+                            </div>
+                            <div class="eligibility-badge eligibility-info-required">⚠ More info required</div>
+                            <div class="c24es-results-item__type">Terceros ampliado</div>
+                            <div class="c24es-details__item">
+                                <span class="c24es-details__item-icon">✓</span>
+                                <span>Asistencia en viaje</span>
+                            </div>
+                            <div class="c24es-details__item">
+                                <span class="c24es-details__item-icon">✓</span>
+                                <span>Defensa jurídica</span>
+                            </div>
+                            <div class="c24es-details__item">
+                                <span class="c24es-details__item-icon">✓</span>
+                                <span>Protección de lunas</span>
+                            </div>
+                            <div class="c24es-satisfaction">
+                                Satisfacción: 78% (8.2)
+                            </div>
+                        </div>
+                        <div class="c24es-results-item__right">
+                            <div class="c24es-price">
+                                <div class="c24es-price__current">892,00 €</div>
+                                <div class="c24es-price__period">al año (Estimated: €880–€920)</div>
+                            </div>
+                            <div class="c24es-button-group">
+                                <button class="btn-primary" onclick="handleContractClick('MAPFRE', false)">Contratar Online</button>
+                                <button class="btn-secondary" onclick="handleContractClick('MAPFRE', false)">Ver detalles</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Result Item 4: AXA -->
+                <article class="c24es-results-item">
+                    <div class="c24es-results-item__container">
+                        <div class="c24es-results-item__left">
+                            <div class="c24es-results-item__company">
+                                <img src="images/logos/axa.svg" alt="AXA">
+                            </div>
+                            <div class="eligibility-badge eligibility-preapproved">✓ Pre-approved</div>
+                            <div class="c24es-results-item__type">Terceros ampliado</div>
+                            <div class="c24es-details__item">
+                                <span class="c24es-details__item-icon">✓</span>
+                                <span>Asistencia en carretera</span>
+                            </div>
+                            <div class="c24es-details__item">
+                                <span class="c24es-details__item-icon">✓</span>
+                                <span>Defensa jurídica</span>
+                            </div>
+                            <div class="c24es-details__item">
+                                <span class="c24es-details__item-icon">✓</span>
+                                <span>Lunas incluidas</span>
+                            </div>
+                            <div class="c24es-satisfaction">
+                                Satisfacción: 80% (8.3)
+                            </div>
+                        </div>
+                        <div class="c24es-results-item__right">
+                            <div class="c24es-price">
+                                <div class="c24es-price__current">920,75 €</div>
+                                <div class="c24es-price__period">al año (Estimated: €900–€940)</div>
+                            </div>
+                            <div class="c24es-button-group">
+                                <button class="btn-primary" onclick="handleContractClick('AXA', true)">Contratar Online</button>
+                                <button class="btn-secondary" onclick="handleContractClick('AXA', true)">Ver detalles</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </main>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Fetching insurer-specific details...</div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="c24-footer" style="background: #F5F5F5; padding: 40px 0; margin-top: 60px;">
+        <div style="max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; gap: 40px;">
+            <div>
+                <h4 style="margin-bottom: 15px;">CHECK24</h4>
+                <p style="color: #666; font-size: 14px;">Comparador de seguros líder en Europa</p>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 15px;">Contacto</h4>
+                <p style="color: #666; font-size: 14px;">+34 924 924 050</p>
+                <p style="color: #666; font-size: 14px;">seguros@check24.es</p>
+                <p style="color: #666; font-size: 14px;">Lun-Vie: 9:00-21:00</p>
+            </div>
+        </div>
+        <div style="max-width: 1400px; margin: 30px auto 0; padding: 20px 20px 0; border-top: 1px solid #DDD; text-align: center; color: #666; font-size: 14px;">
+            <p>© 2024 CHECK24 España - Todos los derechos reservados</p>
+        </div>
+    </footer>
+
+    <!-- Chat Button -->
+    <div style="position: fixed; bottom: 20px; right: 20px; background: #0066CC; color: white; padding: 15px 20px; border-radius: 30px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+        <span>💬 Chat</span>
+    </div>
+
+    <script>
+        // Check if returning from rejection
+        window.addEventListener('DOMContentLoaded', function() {
+            const isRecovery = localStorage.getItem('sef_recovery_mode');
+            if (isRecovery === 'true') {
+                document.getElementById('recovery-banner').classList.add('active');
+
+                // Hide non-preapproved offers
+                const allItems = document.querySelectorAll('.c24es-results-item');
+                allItems.forEach(item => {
+                    const badge = item.querySelector('.eligibility-badge');
+                    if (badge && !badge.classList.contains('eligibility-preapproved')) {
+                        item.style.display = 'none';
+                    }
+                });
+            }
+        });
+
+        function handleContractClick(insurerName, isPreApproved) {
+            // Store the selected insurer
+            localStorage.setItem('sef_selected_insurer', insurerName);
+            localStorage.setItem('sef_flow_started', 'true');
+
+            // Store pre-approval status
+            localStorage.setItem('sef_is_preapproved', isPreApproved ? 'true' : 'false');
+
+            // Store the price based on insurer
+            const prices = {
+                'Prima': '762,33 €',
+                'Allianz': '845,50 €',
+                'MAPFRE': '892,00 €',
+                'AXA': '920,75 €'
+            };
+            localStorage.setItem('sef_final_price', prices[insurerName] || '762,33 €');
+
+            // Show loading overlay
+            const overlay = document.getElementById('loading-overlay');
+            overlay.classList.add('active');
+
+            // Simulate loading for 2 seconds
+            setTimeout(function() {
+                window.location.href = 'details.html?insurer=' + insurerName;
+            }, 2000);
+        }
+
+        // Clear recovery mode when starting fresh
+        function clearRecoveryMode() {
+            localStorage.removeItem('sef_recovery_mode');
+            location.reload();
+        }
+    </script>
+
+</body>
+</html>

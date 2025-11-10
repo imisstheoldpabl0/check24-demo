@@ -1,0 +1,25 @@
+{
+  "name": "check24-insurance-clone",
+  "version": "1.0.0",
+  "description": "CHECK24 car insurance comparison website clone - Full purchase flow demonstration",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "check24",
+    "insurance",
+    "comparison",
+    "demo",
+    "clone"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

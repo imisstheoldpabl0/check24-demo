@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Pago | CHECK24 España</title>
+    <link rel="stylesheet" href="css/wireframe.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/c24es.css">
+    <style>
+        .c24-search { display: none; }
+
+        /* Progress Bar */
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            max-width: 800px;
+            margin: 30px auto;
+            position: relative;
+            padding: 0 20px;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .progress-step::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #DDD;
+            z-index: -1;
+        }
+
+        .progress-step:first-child::before {
+            left: 50%;
+        }
+
+        .progress-step:last-child::before {
+            right: 50%;
+        }
+
+        .progress-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #DDD;
+            color: white;
+            line-height: 30px;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .progress-step.completed .progress-number {
+            background: #2E7D32;
+        }
+
+        .progress-step.active .progress-number {
+            background: #0066CC;
+        }
+
+        .progress-step.completed::before {
+            background: #2E7D32;
+        }
+
+        .progress-label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .progress-step.active .progress-label {
+            color: #0066CC;
+            font-weight: bold;
+        }
+
+        /* Page Layout */
+        .payment-page-body {
+            display: flex;
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .payment-sidebar {
+            flex: 0 0 320px;
+        }
+
+        .payment-main {
+            flex: 1;
+        }
+
+        /* Sidebar */
+        .sidebar-card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+            position: sticky;
+            top: 20px;
+        }
+
+        /* Form */
+        .payment-card {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .payment-section {
+            margin-bottom: 30px;
+        }
+
+        .payment-section h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #DDD;
+            border-radius: 4px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #0066CC;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .payment-methods {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .payment-method {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #DDD;
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .payment-method:hover {
+            border-color: #0066CC;
+        }
+
+        .payment-method.active {
+            background: #E3F2FD;
+            border-color: #0066CC;
+        }
+
+        .payment-method-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .payment-method-label {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .card-input-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .card-icons {
+            position: absolute;
+            right: 12px;
+            top: 38px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .card-icon {
+            width: 32px;
+            height: 20px;
+            background: #F5F5F5;
+            border: 1px solid #DDD;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+            color: #666;
+        }
+
+        .security-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #F0F7FF;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .security-badge-icon {
+            font-size: 24px;
+        }
+
+        .btn-primary {
+            background: #0066CC;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #0052A3;
+        }
+
+        .summary-box {
+            background: #F9F9F9;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 15px;
+            border-top: 2px solid #DDD;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .summary-total .amount {
+            color: #0066CC;
+            font-size: 24px;
+        }
+
+        /* Rejection Modal */
+        .rejection-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .rejection-modal.active {
+            display: flex;
+        }
+
+        .rejection-content {
+            background: white;
+            padding: 50px;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            animation: slideDown 0.4s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .rejection-loading {
+            text-align: center;
+        }
+
+        .rejection-loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid #E0E0E0;
+            border-top: 6px solid #0066CC;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 25px;
+        }
+
+        .rejection-loading-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .rejection-loading-subtext {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .rejection-error {
+            display: none;
+        }
+
+        .rejection-error.active {
+            display: block;
+        }
+
+        .rejection-error-icon {
+            font-size: 50px;
+            margin-bottom: 25px;
+            line-height: 1;
+        }
+
+        .rejection-error-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #D32F2F;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .rejection-error-message {
+            background: #FFEBEE;
+            border-left: 4px solid #D32F2F;
+            padding: 20px 25px;
+            border-radius: 6px;
+            text-align: left;
+            margin-bottom: 25px;
+        }
+
+        .rejection-error-message p {
+            margin: 0 0 10px 0;
+            font-size: 15px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .rejection-error-message p:last-child {
+            margin-bottom: 0;
+        }
+
+        .rejection-error-subtitle {
+            font-size: 16px;
+            color: #2E7D32;
+            font-weight: bold;
+            margin-bottom: 20px;
+            margin-top: 10px;
+        }
+
+        .rejection-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .rejection-button {
+            flex: 1;
+            min-width: 200px;
+            padding: 16px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .rejection-button-primary {
+            background: #2E7D32;
+            color: white;
+        }
+
+        .rejection-button-primary:hover {
+            background: #1B5E20;
+        }
+
+        .rejection-button-secondary {
+            background: white;
+            color: #0066CC;
+            border: 2px solid #0066CC;
+        }
+
+        .rejection-button-secondary:hover {
+            background: #F0F7FF;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="c24-body c24-wide c24-fluid-grid">
+
+    <!-- Rejection Modal -->
+    <div id="rejection-modal" class="rejection-modal">
+        <div class="rejection-content">
+            <!-- Loading State -->
+            <div id="rejection-loading" class="rejection-loading">
+                <div class="rejection-loading-spinner"></div>
+                <div class="rejection-loading-text">Processing your request with the insurer...</div>
+                <div class="rejection-loading-subtext">Please wait while we finalize your policy</div>
+            </div>
+
+            <!-- Error State -->
+            <div id="rejection-error" class="rejection-error">
+                <div class="rejection-error-icon">❌</div>
+                <div class="rejection-error-title">Your policy could not be approved</div>
+                <div class="rejection-error-message">
+                    <p><strong>The insurer declined this policy due to updated risk data.</strong></p>
+                    <p>Our system detected a change in your risk profile that requires a different coverage approach.</p>
+                    <p style="color: #2E7D32; font-weight: bold; margin-top: 15px;">But don't worry — you still have eligible options!</p>
+                </div>
+                <div class="rejection-error-subtitle">
+                    Choose how you'd like to proceed:
+                </div>
+                <div class="rejection-buttons">
+                    <button class="rejection-button rejection-button-primary" onclick="viewAlternativeOffers()">
+                        📋 View Alternative Offers
+                    </button>
+                    <button class="rejection-button rejection-button-secondary" onclick="adjustCoverage()">
+                        🔧 Adjust My Coverage
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="c24-header" style="background: white; border-bottom: 1px solid #E0E0E0; padding: 15px 0;">
+        <div style="max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center;">
+            <div class="c24-logo">
+                <img src="images/logos/check24.svg" alt="CHECK24" style="height: 45px;">
+            </div>
+            <nav style="display: flex; gap: 25px; align-items: center;">
+                <a href="#" style="color: #333; text-decoration: none; font-size: 14px;">Mi cuenta</a>
+                <a href="#" style="color: #333; text-decoration: none; font-size: 14px;">Ayuda</a>
+                <span style="color: #666; font-size: 14px;">+34 924 924 050</span>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+        <div class="progress-step completed">
+            <div class="progress-number">1</div>
+            <div class="progress-label">Detalles tarifa</div>
+        </div>
+        <div class="progress-step completed">
+            <div class="progress-number">2</div>
+            <div class="progress-label">Garantías extra</div>
+        </div>
+        <div class="progress-step completed">
+            <div class="progress-number">3</div>
+            <div class="progress-label">Datos contratación</div>
+        </div>
+        <div class="progress-step active">
+            <div class="progress-number">4</div>
+            <div class="progress-label">Pago</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="payment-page-body">
+        <!-- Sidebar -->
+        <aside class="payment-sidebar">
+            <div class="sidebar-card">
+                <h3 style="font-size: 18px; margin-bottom: 20px;">Resumen del pedido</h3>
+
+                <div style="margin-bottom: 20px;">
+                    <img src="images/logos/prima.svg" alt="Prima" style="height: 35px; margin-bottom: 10px;">
+                    <p style="font-size: 14px; color: #666; margin-bottom: 5px;"><strong>Prima</strong> - Terceros ampliado</p>
+                    <p style="font-size: 13px; color: #999;">Volkswagen Golf 1.5 TSI</p>
+                    <p style="font-size: 13px; color: #999;">Matrícula: 7482BCM</p>
+                </div>
+
+                <hr style="margin: 20px 0; border: none; border-top: 1px solid #EEE;">
+
+                <div class="summary-box">
+                    <div class="summary-row">
+                        <span>Precio base:</span>
+                        <span>812,33 €</span>
+                    </div>
+                    <div class="summary-row" style="color: #2E7D32;">
+                        <span>Descuento CHECK24:</span>
+                        <span>-50,00 €</span>
+                    </div>
+                    <div class="summary-total">
+                        <span>Total:</span>
+                        <span class="amount">762,33 €</span>
+                    </div>
+                    <p style="text-align: right; font-size: 12px; color: #666; margin-top: 5px;">pago anual</p>
+                </div>
+
+                <div style="background: #E8F5E9; padding: 12px; border-radius: 6px; margin-bottom: 20px;">
+                    <p style="font-size: 13px; color: #2E7D32; margin: 0;">
+                        ✓ Cobertura desde el 01.12.2025
+                    </p>
+                </div>
+
+                <hr style="margin: 20px 0; border: none; border-top: 1px solid #EEE;">
+
+                <!-- Contact -->
+                <div style="text-align: center;">
+                    <p style="font-size: 14px; margin-bottom: 10px;">¿Necesitas ayuda?</p>
+                    <p style="font-size: 20px; font-weight: bold; color: #0066CC; margin-bottom: 10px;">911 813 001</p>
+                    <p style="font-size: 12px; color: #666;">Lun-Vie: 9:00 - 20:00</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Payment Form -->
+        <main class="payment-main">
+            <div class="payment-card">
+                <h2 style="font-size: 24px; margin-bottom: 10px;">Método de pago</h2>
+                <p style="color: #666; margin-bottom: 30px;">Selecciona tu método de pago preferido</p>
+
+                <div class="security-badge">
+                    <div class="security-badge-icon">🔒</div>
+                    <div>
+                        <strong style="color: #0066CC;">Pago 100% seguro</strong>
+                        <p style="margin: 3px 0 0 0; font-size: 13px; color: #666;">Todos tus datos están encriptados con tecnología SSL</p>
+                    </div>
+                </div>
+
+                <!-- Payment Methods -->
+                <div class="payment-section">
+                    <h3>Selecciona el método de pago</h3>
+                    <div class="payment-methods">
+                        <div class="payment-method active">
+                            <div class="payment-method-icon">💳</div>
+                            <div class="payment-method-label">Tarjeta</div>
+                        </div>
+                        <div class="payment-method">
+                            <div class="payment-method-icon">🏦</div>
+                            <div class="payment-method-label">Domiciliación</div>
+                        </div>
+                        <div class="payment-method">
+                            <div class="payment-method-icon">📱</div>
+                            <div class="payment-method-label">Bizum</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Payment Form -->
+                <div class="payment-section">
+                    <h3>Datos de la tarjeta</h3>
+
+                    <div class="card-input-wrapper">
+                        <label class="form-label">Número de tarjeta</label>
+                        <input type="text" class="form-input" placeholder="1234 5678 9012 3456" maxlength="19" value="4532 1234 5678 9010">
+                        <div class="card-icons">
+                            <div class="card-icon">VISA</div>
+                            <div class="card-icon">MC</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Titular de la tarjeta</label>
+                        <input type="text" class="form-input" placeholder="Nombre en la tarjeta" value="CARLOS GARCIA LOPEZ">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Fecha de expiración</label>
+                            <input type="text" class="form-input" placeholder="MM / AA" value="12 / 26">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">CVV</label>
+                            <input type="text" class="form-input" placeholder="123" maxlength="3" value="123">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Info -->
+                <div class="payment-section">
+                    <div style="background: #F0F7FF; padding: 20px; border-radius: 6px;">
+                        <h4 style="font-size: 16px; margin-bottom: 15px; color: #0066CC;">¿Qué ocurre al confirmar?</h4>
+                        <ul style="margin: 0; padding-left: 20px; color: #666; font-size: 14px; line-height: 1.8;">
+                            <li>Se procesará el pago de 762,33 €</li>
+                            <li>Recibirás la confirmación por email</li>
+                            <li>Tu póliza estará activa desde el 01.12.2025</li>
+                            <li>Podrás descargar tu documentación desde Mi cuenta</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div style="margin-top: 30px;">
+                    <button type="button" class="btn-primary" onclick="handlePurchase()">
+                        Contratar ahora
+                    </button>
+                    <p style="text-align: center; font-size: 12px; color: #2E7D32; margin-top: 15px;">
+                        🔒 Pago seguro garantizado
+                    </p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="c24-footer" style="background: #F5F5F5; padding: 40px 0; margin-top: 60px;">
+        <div style="max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; gap: 40px;">
+            <div>
+                <h4 style="margin-bottom: 15px;">CHECK24</h4>
+                <p style="color: #666; font-size: 14px;">Comparador de seguros líder en Europa</p>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 15px;">Contacto</h4>
+                <p style="color: #666; font-size: 14px;">+34 924 924 050</p>
+                <p style="color: #666; font-size: 14px;">seguros@check24.es</p>
+                <p style="color: #666; font-size: 14px;">Lun-Vie: 9:00-21:00</p>
+            </div>
+        </div>
+        <div style="max-width: 1400px; margin: 30px auto 0; padding: 20px 20px 0; border-top: 1px solid #DDD; text-align: center; color: #666; font-size: 14px;">
+            <p>© 2024 CHECK24 España - Todos los derechos reservados</p>
+        </div>
+    </footer>
+
+    <script>
+        function handlePurchase() {
+            // Check if coming from recovery mode (pre-approved offers)
+            const isRecoveryMode = localStorage.getItem('sef_recovery_mode') === 'true';
+
+            if (isRecoveryMode) {
+                // Success flow for pre-approved offers
+                showSuccessMessage();
+            } else {
+                // Rejection flow for first attempt
+                showRejectionFlow();
+            }
+        }
+
+        function showSuccessMessage() {
+            // Show success message
+            const message = document.createElement('div');
+            message.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: white;
+                padding: 40px;
+                border-radius: 12px;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+                text-align: center;
+                z-index: 10000;
+                max-width: 500px;
+            `;
+
+            message.innerHTML = `
+                <div style="font-size: 60px; margin-bottom: 20px;">✅</div>
+                <h2 style="font-size: 28px; color: #2E7D32; margin-bottom: 15px;">¡Contratación exitosa!</h2>
+                <p style="font-size: 16px; color: #666; margin-bottom: 10px;">
+                    Tu póliza de seguro ha sido activada correctamente.
+                </p>
+                <p style="font-size: 14px; color: #999; margin-bottom: 25px;">
+                    Recibirás un email de confirmación en breve.
+                </p>
+                <div style="background: #F0F7FF; padding: 15px; border-radius: 6px; margin-bottom: 25px;">
+                    <p style="font-size: 14px; margin: 0; text-align: left;">
+                        <strong>Póliza:</strong> ${localStorage.getItem('sef_selected_insurer') || 'Prima'} - Terceros ampliado<br>
+                        <strong>Vehículo:</strong> Volkswagen Golf 1.5 TSI (7482BCM)<br>
+                        <strong>Precio:</strong> ${localStorage.getItem('sef_final_price') || '762,33 €'} / año<br>
+                        <strong>Inicio:</strong> 01.12.2025
+                    </p>
+                </div>
+                <button onclick="resetAndGoToResults()" style="background: #0066CC; color: white; border: none; padding: 12px 30px; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold;">
+                    Volver al inicio
+                </button>
+            `;
+
+            // Add overlay
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: 9999;
+            `;
+
+            document.body.appendChild(overlay);
+            document.body.appendChild(message);
+        }
+
+        function showRejectionFlow() {
+            // Show rejection modal
+            const modal = document.getElementById('rejection-modal');
+            modal.classList.add('active');
+
+            // Show loading state
+            document.getElementById('rejection-loading').style.display = 'block';
+            document.getElementById('rejection-error').classList.remove('active');
+
+            // Simulate processing (2 seconds)
+            setTimeout(function() {
+                // Hide loading, show error
+                document.getElementById('rejection-loading').style.display = 'none';
+                document.getElementById('rejection-error').classList.add('active');
+            }, 2000);
+        }
+
+        function resetAndGoToResults() {
+            // Clear all SEF data for fresh start
+            localStorage.removeItem('sef_recovery_mode');
+            localStorage.removeItem('sef_selected_insurer');
+            localStorage.removeItem('sef_flow_started');
+            localStorage.removeItem('sef_miniform_completed');
+            localStorage.removeItem('sef_data_verified');
+            localStorage.removeItem('sef_eligibility_confirmed');
+            window.location.href = 'results.html';
+        }
+
+        function viewAlternativeOffers() {
+            // Set recovery mode
+            localStorage.setItem('sef_recovery_mode', 'true');
+            // Clear mini-form flag so user has to fill it again for new insurer
+            localStorage.removeItem('sef_miniform_completed');
+            localStorage.removeItem('sef_data_verified');
+            // Redirect to results page (will show only pre-approved offers)
+            window.location.href = 'results.html';
+        }
+
+        function adjustCoverage() {
+            // For now, just go back to personalize with alert
+            alert('This would reload the page with a sidebar to adjust deductible, vehicle use, etc. For this demo, we\'ll redirect you to the personalize page.');
+            window.location.href = 'personalize.html';
+        }
+    </script>
+
+</body>
+</html>
